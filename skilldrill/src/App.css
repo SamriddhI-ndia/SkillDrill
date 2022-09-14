@@ -26,6 +26,9 @@ h2{
     margin:40px;
     font-weight: bolder;
 }
+.li-color{
+    color: white !important;
+}
 /* .timeline-content{
     background: #000;
 } */

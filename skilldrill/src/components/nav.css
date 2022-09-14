@@ -1,3 +1,6 @@
+.color{
+    color: white !important;
+}
 .color:hover {
     color: #063470 !important;
 }
