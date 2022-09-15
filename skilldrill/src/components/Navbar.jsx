@@ -29,22 +29,22 @@ const Navbar = () => {
 
                 <div className="collapse navbar-collapse justify-content-end align-center" id="main-nav">
                     <ul className="navbar-nav">
-                    <li className="nav-item pe-4 li-color ">
+                    <li className="nav-item pe-4">
                             <Link to="/" className="nav-link fs-5 fw-bold color">
                             <span className="border-primary border-p-4 mr-2">Home </span>
                             </Link>
                         </li>
-                        <li className="nav-item pe-4 li-color">
+                        <li className="nav-item pe-4">
                             <Link to="/" className="nav-link fs-5 fw-bold color">
                             About
                             </Link>
                         </li>
-                        <li className="nav-item pe-4 li-color">
+                        <li className="nav-item pe-4">
                             <Link to="/room" className="nav-link fs-5 fw-bold color">
                                 Join A Room
                             </Link>
                             </li>
-                        <li className="nav-item pe-4 li-color">
+                        <li className="nav-item pe-4">
                             <Link to="/history" className="nav-link fs-5 fw-bold color">
                                Reports
                             </Link>

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import './codeEditor.css'
-const CodeEditor = () => {
+import '../Room.css'
+const Room = () => {
     const navigate = useNavigate();
 
     const [roomId, setRoomId] = useState('');
@@ -57,7 +57,7 @@ const CodeEditor = () => {
                         value={username}
                         onKeyUp={handleInputEnter}
                     />
-                    <button className="btn joinBtn" onClick={joinRoom}>
+                    <button className="butn joinBtn" onClick={joinRoom}>
                         Join
                     </button>
                     <span className="createInfo">
@@ -76,4 +76,4 @@ const CodeEditor = () => {
     );
 };
 
-export default CodeEditor;
+export default Room;

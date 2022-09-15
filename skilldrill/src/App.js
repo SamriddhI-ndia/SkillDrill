@@ -7,8 +7,8 @@ import OutlinedCard from './components/home/OutlinedCard';
 import Footer from './components/Footer';
 import Caro from './components/home/Caro';
 import Navbar from './components/Navbar';
-import CodeEditor from './components/CodeEditor'
-import Editor from './components/Editor';
+import Room from './pages/Room'
+import Editor from './pages/mainWindow';
 import { Toaster } from 'react-hot-toast';
 import {BrowserRouter ,Routes,Route} from 'react-router-dom';
 function App() {
@@ -37,7 +37,7 @@ function App() {
         <Route exact path="/" element={ <Home/>}>
          
         </Route>
-        <Route exact path='/room' element={<CodeEditor/>}>
+        <Route exact path='/room' element={<Room/>}>
           
         </Route >
         <Route path='/editor/:roomId' element={<Editor/>}>
