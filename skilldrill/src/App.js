@@ -7,6 +7,7 @@ import OutlinedCard from './components/home/OutlinedCard';
 import Footer from './components/Footer';
 import Caro from './components/home/Caro';
 import Navbar from './components/Navbar';
+import Cont from './components/Container/Cont'
 import {BrowserRouter as Router,Route,Switch,Link} from 'react-router-dom';
 function App() {
   return (
@@ -20,8 +21,12 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Home/>
+          {/* <Cont/> */}
         </Route>
-        
+        <Route exact path="/whiteboard">
+          {/* <Home/> */}
+          <Cont/>
+        </Route>
       </Switch>
     </div>
     </Router>

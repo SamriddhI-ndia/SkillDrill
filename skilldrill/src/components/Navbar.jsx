@@ -39,7 +39,11 @@ const Navbar = () => {
                             About
                             </Link>
                         </li>
-                        
+                        <li className="nav-item pe-4">
+                            <Link to="/whiteboard" className="nav-link fs-5 fw-bold color">
+                            Whiteboard
+                            </Link>
+                        </li>
                         <li className="nav-item pe-4">
                             <Link to="/history" className="nav-link fs-5 fw-bold color">
                                Reports
