@@ -32,6 +32,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
+    "roughjs": "^4.5.2",
     "socket.io": "^4.5.2",
     "socket.io-client": "^4.5.2",
     "styled-components": "^5.3.3",

@@ -23,6 +23,7 @@ io.on('connection', (socket)=>{
         socket.join(roomId);
         const clients = getAllConnectedClients(roomId);
         console.log(clients);
+        
         clients.forEach(({socketId})=>{
             io.to(socketId).emit(ACTIONS.JOINED,{
                 clients,
@@ -32,8 +33,18 @@ io.on('connection', (socket)=>{
         })
     });
 
+    socket.on(ACTIONS.WHITEBOARD_CHANGE, ({roomId, canvasImage})=>{
+        console.log("yaaahhhhaaaaaa");
+        //console.log(canvasImage);
+        socket.in(roomId).emit(ACTIONS.WHITEBOARD_CHANGE, { canvasImage });
+    })
+
+    socket.on(ACTIONS.SYNC_WHITEBOARD, ({ socketId, canvasImage }) => {
+        io.to(socketId).emit(ACTIONS.WHITEBOARD_CHANGE, { canvasImage });
+    })
+
     socket.on(ACTIONS.CODE_CHANGE, ({roomId,code})=>{
-        socket.in(roomId).emit(ACTIONS.CODE_CHANGE, {code});
+        socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
     })
 
     socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {

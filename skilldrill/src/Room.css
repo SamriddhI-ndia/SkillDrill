@@ -142,3 +142,17 @@ body {
     line-height: 1.6;
     padding-top: 20px;
 }
+.editorWrap span{
+    color:white;
+    margin: 30px;
+}
+.editorWrap h5{
+    
+    margin: 5px;
+    padding: 10px 10px;
+    
+    display: inline-block!important;
+}
+.editorWrap h5:active{
+    border-bottom: 2px solid red;
+}

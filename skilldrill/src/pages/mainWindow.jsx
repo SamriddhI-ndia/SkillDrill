@@ -6,6 +6,7 @@ import Client from '../components/mainWindow/Client';
 import CodeEditor from "../components/mainWindow/CodeEditor";
 import ACTIONS from "../components/mainWindow/Actions";
 import { useLocation,useNavigate,Navigate,useParams } from "react-router-dom";
+import WhiteBoard from "../components/Board/WhiteBoard";
 
 const Editor=()=>{ 
     const socketRef = useRef(null); //component don't re-render after any change in state of useRef. 
@@ -14,6 +15,7 @@ const Editor=()=>{
     const reactNavigator = useNavigate();
     const {roomId} =useParams();
     const [clients,setClients]=useState([]);
+    const canvasRef = useRef(null);
     useEffect(()=>{
         const init =async()=>{
             socketRef.current=await initSocket();
@@ -42,6 +44,10 @@ const Editor=()=>{
                     code: codeRef.current,
                     socketId,
                 });
+                socketRef.current.emit(ACTIONS.SYNC_WHITEBOARD, {
+                    canvasImage: canvasRef.current.toDataURL("image/png"),
+                    socketId,
+                });
             })
 
             // Listening for disconnected 
@@ -60,14 +66,9 @@ const Editor=()=>{
             socketRef.current.disconnect();
         }
     }, []);
-
-
     
     const avatar= clients.map((client)=>(<Client username={client.username} key={client.socketId}/>)
-        
     )
-    
-    console.log("look here", avatar);
 
     async function copyRoomId() {
         try {
@@ -102,13 +103,15 @@ const Editor=()=>{
             <button className="butn leaveBtn" onClick={leaveRoom}>Leave</button>
         </div>
         <div className="editorWrap">
+            
             <CodeEditor 
                 socketRef={socketRef} 
                 roomId={roomId}  
                 onCodeChange={(code) => {
                             codeRef.current = code;
                         }}
-            />
+            /> 
+            <WhiteBoard socketRef={socketRef} canvasRef={canvasRef} roomId={roomId}/> 
         </div>
     </div>
 };

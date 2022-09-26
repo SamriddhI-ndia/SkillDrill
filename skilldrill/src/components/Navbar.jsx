@@ -39,11 +39,16 @@ const Navbar = () => {
                             About
                             </Link>
                         </li>
+                        {/* <li className="nav-item pe-4">
+                            <Link to="/whiteboard" className="nav-link fs-5 fw-bold color">
+                            Whiteboard
+                            </Link>
+                        </li> */}
                         <li className="nav-item pe-4">
                             <Link to="/room" className="nav-link fs-5 fw-bold color">
                                 Join A Room
                             </Link>
-                            </li>
+                        </li>
                         <li className="nav-item pe-4">
                             <Link to="/history" className="nav-link fs-5 fw-bold color">
                                Reports
@@ -52,10 +57,10 @@ const Navbar = () => {
                         <li className="nav-item pe-4">
                             <Link to="/wishlist" className="nav-link fs-5 fw-bold color">
                                 Profile
+                                
                             </Link>
                         </li>
-                        
-                        
+                       
                     </ul>
                 </div>
             </div>

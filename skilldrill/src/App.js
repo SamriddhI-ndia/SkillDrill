@@ -43,6 +43,9 @@ function App() {
         <Route path='/editor/:roomId' element={<Editor/>}>
           
         </Route>
+        {/* <Route path='/whiteboard' element={<Board/>}>
+
+        </Route> */}
       </Routes>
     </div>
     </BrowserRouter>
