@@ -1,28 +1,13 @@
-/* .caro::after{
-    content:'';
-    position: absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: linear-gradient(rgba(0, 41, 68,0.5),rgba(47, 110, 247,0.5),rgba(109, 205, 250,0.5),rgba(111, 225, 253,0.5));
-    clip-path: circle(38% at 10% 35%);
-    
-} */
 .caro-pic{
     width:100vmax;
     height:87vmin;
-    /* border-radius: 20px;
-    box-shadow: 20px 20px 20px 20px rgba(23, 174, 250, 0.5);
-    backdrop-filter: blur(10px); */
 }
 .caro{
-    /* background: #1493d3; */
     width:100vmax;
     height:100vmin;
     display: flex;
     justify-content: center;
-    /* align-items: center; */
+    color:#BFCFD5;
 }
 .unique-img{
     width:100px;

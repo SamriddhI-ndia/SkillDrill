@@ -16,8 +16,10 @@ const Editor=()=>{
     const {roomId} =useParams();
     const [clients,setClients]=useState([]);
     const canvasRef = useRef(null);
+    const [prevState, setPrevState] = useState('CodeEditor');
     useEffect(()=>{
         const init =async()=>{
+            console.log("aaya aaya")
             socketRef.current=await initSocket();
             socketRef.current.on('connect_error', (err)=>handleErrors(err));
             socketRef.current.on('connect_failed', (err)=>handleErrors(err));
@@ -102,16 +104,28 @@ const Editor=()=>{
             <button className="butn copyBtn" onClick={copyRoomId}>Copy Room Id</button>
             <button className="butn leaveBtn" onClick={leaveRoom}>Leave</button>
         </div>
+        
         <div className="editorWrap">
-            
+            <button onClick={()=>setPrevState("CodeEditor")}
+                className={prevState=='CodeEditor'?"buttonActive":""}>
+                Code Editor
+            </button>
+            <button onClick={()=>setPrevState("WhiteBoard")}
+                className={prevState=='WhiteBoard'?"buttonActive":""}>
+                WhiteBoard
+            </button>
             <CodeEditor 
                 socketRef={socketRef} 
                 roomId={roomId}  
-                onCodeChange={(code) => {
-                            codeRef.current = code;
-                        }}
-            /> 
-            <WhiteBoard socketRef={socketRef} canvasRef={canvasRef} roomId={roomId}/> 
+                onCodeChange={(code) => {codeRef.current = code;}}
+                prevState={prevState}
+            />
+            <WhiteBoard 
+                socketRef={socketRef} 
+                canvasRef={canvasRef} 
+                roomId={roomId}
+                prevState={prevState}
+            />
         </div>
     </div>
 };

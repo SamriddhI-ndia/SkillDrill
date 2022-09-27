@@ -4,15 +4,11 @@ import CustomizedTimeline from '../components/home/CustomizedTimeline';
 import OutlinedCard from '../components/home/OutlinedCard';
 import Footer from '../components/Footer';
 import Caro from '../components/home/Caro';
-import Navbar from '../components/Navbar';
-import { Router } from 'react-router-dom';
 const Home = () => {
-    console.log("aaya hai");
     return ( 
         <div className="App">
-        {/* <Navbar/> */}
-        <Container maxWidth="m" minWidth="sm" style={{"margin":"0px","padding":"0px"}}>
-        <h1 style={{"fontWeight":"bolder","fontSize":"6rem","position":"absolute","top":"40vmin","left":"7vmax","zIndex":"3"}}>SkillDrill</h1>
+        <Container style={{"margin":"0px","padding":"0px"}}>
+        <h1 style={{"fontWeight":"bolder","fontSize":"6rem","position":"absolute","top":"40vmin","left":"7vmax","zIndex":"3","color":"white"}}>SkillDrill</h1>
         <h4 style={{"fontWeight":"bolder","fontSize":"2rem","position":"absolute","top":"57vmin","left":"7vmax","zIndex":"3","color":"#3d5a80"}}>A online Interview-Tool And Code Editor</h4>
             <div style={{"zIndex":"1"}}>
           <Caro/>

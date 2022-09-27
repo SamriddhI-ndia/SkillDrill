@@ -137,7 +137,7 @@ body {
     margin-top: 20px;
 }
 .CodeMirror {
-    min-height: calc(100vh - 75px);
+    min-height: calc(100vh - 130px);
     font-size: 20px;
     line-height: 1.6;
     padding-top: 20px;
@@ -147,12 +147,31 @@ body {
     margin: 30px;
 }
 .editorWrap h5{
-    
     margin: 5px;
     padding: 10px 10px;
-    
     display: inline-block!important;
 }
 .editorWrap h5:active{
     border-bottom: 2px solid red;
+}
+.codeEditorNotVisible{
+    display: none!important;
+}
+.whiteboardNotVisible{
+    display: none!important;
+}
+button{
+    background-color: #11131a;
+    color:white;
+    border:0px solid #090a0e;
+    padding: 7px;
+    font-size: 0.8rem;
+}
+.buttonActive{
+    background-color: #282a36;
+    border:0px solid #090a0e;
+}
+.whiteboardButton{
+    margin: 0.3rem;
+    border-radius:10px;
 }

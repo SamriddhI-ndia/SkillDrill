@@ -8,7 +8,7 @@ import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from './Actions';
 
 
-const CodeEditor = ({socketRef, roomId,  onCodeChange}) => {
+const CodeEditor = ({socketRef, roomId,  onCodeChange, prevState}) => {
     const editorRef = useRef(null);
     useEffect(()=>{
         async function init(){
@@ -52,7 +52,10 @@ const CodeEditor = ({socketRef, roomId,  onCodeChange}) => {
         };
     },[socketRef.current])
     return (
-        <textarea id="realtimeEditor"></textarea>
+        <div className={prevState=="CodeEditor"? "codeEditorVisible":"codeEditorNotVisible"}>
+            <textarea id="realtimeEditor"></textarea>
+        </div>
+        
     );
 };
 

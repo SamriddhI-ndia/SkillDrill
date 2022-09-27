@@ -3,6 +3,9 @@
 #e0fbfc  light light blue
 #ee6c4d  rust
 #293241 dark dark blue */
+body{
+    color: white!important;
+}
 h2{
     display: block!important;
 }
@@ -25,7 +28,6 @@ h2{
 .headin{
     margin:40px;
     font-weight: bolder;
+    color:white;
 }
-/* .timeline-content{
-    background: #000;
-} */
+

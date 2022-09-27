@@ -55,8 +55,8 @@ const Navbar = () => {
                             </Link>
                         </li>
                         <li className="nav-item pe-4">
-                            <Link to="/wishlist" className="nav-link fs-5 fw-bold color">
-                                Profile
+                            <Link to="/report" className="nav-link fs-5 fw-bold color">
+                                Report
                                 
                             </Link>
                         </li>

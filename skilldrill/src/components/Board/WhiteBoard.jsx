@@ -3,7 +3,7 @@ import ACTIONS from "../mainWindow/Actions";
 import "./canvas.css";
 
 
-function WhiteBoard({socketRef, canvasRef, roomId}) {
+function WhiteBoard({socketRef, canvasRef, roomId, prevState}) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState("#3B3B3B");
   const [size, setSize] = useState("3");
@@ -15,8 +15,6 @@ function WhiteBoard({socketRef, canvasRef, roomId}) {
   useEffect(() => {
     const canvas = canvasRef.current;
     ctx.current = canvas.getContext("2d");
-
-    //Resizing
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
 
@@ -60,13 +58,11 @@ function WhiteBoard({socketRef, canvasRef, roomId}) {
   };
 
   const clearCanvas = () => {
-    // localStorage.removeItem("canvasimg");
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     context.fillStyle = "#282A36";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    //Passing clear screen
     if (timeout.current !== undefined) clearTimeout(timeout.current);
     timeout.current = setTimeout(function () {
       var canvasImage = canvas.toDataURL("image/png");
@@ -112,12 +108,12 @@ function WhiteBoard({socketRef, canvasRef, roomId}) {
 },[socketRef.current])
 
   return (
-    <>
+    <div className={prevState=="CodeEditor"? "whiteboardNotVisible":"whiteboardVisible"}>
       <div className="canvas-btn">
-      <button onClick={getPen} className="btn-width">
+      <button onClick={getPen} className="btn-width whiteboardButton">
           Pencil
         </button>
-        <div className="btn-width">
+        <div className="btn-width ">
           <input
             type="color"
             value={color}
@@ -126,7 +122,7 @@ function WhiteBoard({socketRef, canvasRef, roomId}) {
         </div>
         <div>
           <select
-            className="btn-width"
+            className="btn-width whiteboardButton"
             value={size}
             onChange={(e) => setSize(e.target.value)}
           >
@@ -140,12 +136,12 @@ function WhiteBoard({socketRef, canvasRef, roomId}) {
             <option> 30 </option>
           </select>
         </div>
-        <button onClick={clearCanvas} className="btn-width">
+        <button onClick={clearCanvas} className="btn-width whiteboardButton">
           Clear
         </button>
         <div>
-          <button onClick={()=>setErase(true)} className="btn-width">
-            Erase
+          <button onClick={()=>setErase(true)} className="btn-width whiteboardButton">
+            Eraser
           </button>
         </div>
       </div>
@@ -156,7 +152,7 @@ function WhiteBoard({socketRef, canvasRef, roomId}) {
         onMouseMove={draw}
         ref={canvasRef}
       />
-    </>
+    </div>
   );
 }
 export default WhiteBoard;

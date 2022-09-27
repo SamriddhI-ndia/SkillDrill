@@ -1,14 +1,9 @@
-//import Navbar from './components/Navbar';
 import './App.css';
-import { Container } from '@mui/material';
-import CustomizedTimeline from './components/home/CustomizedTimeline';
 import Home from './pages/Home';
-import OutlinedCard from './components/home/OutlinedCard';
-import Footer from './components/Footer';
-import Caro from './components/home/Caro';
 import Navbar from './components/Navbar';
 import Room from './pages/Room'
 import Editor from './pages/mainWindow';
+import Report from './components/report/Report';
 import { Toaster } from 'react-hot-toast';
 import {BrowserRouter ,Routes,Route} from 'react-router-dom';
 function App() {
@@ -43,9 +38,9 @@ function App() {
         <Route path='/editor/:roomId' element={<Editor/>}>
           
         </Route>
-        {/* <Route path='/whiteboard' element={<Board/>}>
+        <Route path='/report' element={<Report/>}>
 
-        </Route> */}
+        </Route>
       </Routes>
     </div>
     </BrowserRouter>
