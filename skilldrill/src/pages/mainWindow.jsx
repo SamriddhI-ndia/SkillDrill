@@ -1,12 +1,17 @@
 import React, { useEffect } from "react";
 import toast from 'react-hot-toast';
-import { useState,useRef } from "react";
+import { useState,useRef, useReducer } from "react";
 import { initSocket } from "../socket";
 import Client from '../components/mainWindow/Client';
 import CodeEditor from "../components/mainWindow/CodeEditor";
 import ACTIONS from "../components/mainWindow/Actions";
 import { useLocation,useNavigate,Navigate,useParams } from "react-router-dom";
 import WhiteBoard from "../components/Board/WhiteBoard";
+import AudioVideo from "../components/audioVideo/AudioVideo";
+import Peer from 'peerjs';
+import {v4 as uuidV4} from 'uuid';
+import { peerReducer } from "../redux/peerReducer";
+import { addPeerAction } from "../redux/peerActions";
 
 const Editor=()=>{ 
     const socketRef = useRef(null); //component don't re-render after any change in state of useRef. 
@@ -15,8 +20,17 @@ const Editor=()=>{
     const reactNavigator = useNavigate();
     const {roomId} =useParams();
     const [clients,setClients]=useState([]);
+    const [noOfClient, setNoOfClient] = useState(0);
     const canvasRef = useRef(null);
     const [prevState, setPrevState] = useState('CodeEditor');
+    const [me, setMe] = useState();
+    const [stream, setStream] = useState();
+    const socketId = uuidV4();
+    const [peers, dispatch]=useReducer(peerReducer,{});
+    const getUsers = ({clients})=>{
+        console.log(clients);
+    }
+
     useEffect(()=>{
         const init =async()=>{
             console.log("aaya aaya")
@@ -29,19 +43,27 @@ const Editor=()=>{
                 toast.error('socket connection failed, try again later.');
                 reactNavigator('/');
             }
+            
+            const peer = new Peer(socketId);
+            setMe(peer); 
+            console.log("peers");
+            console.log(peer);
 
             socketRef.current.emit(ACTIONS.JOIN, {
                 roomId,
                 username: location.state?.username,
+                socketId
             });
 
+            socketRef.current.on("get-users", getUsers);
+        
             //Listening for joined event
             socketRef.current.on(ACTIONS.JOINED, ({clients, username, socketId})=>{
                 if(username!== location.state?.username) {
                     toast.success(`${username} joined the room`);
                     console.log(`${username} joined`);
                 }
-                setClients(clients);
+                
                 socketRef.current.emit(ACTIONS.SYNC_CODE, {
                     code: codeRef.current,
                     socketId,
@@ -68,6 +90,24 @@ const Editor=()=>{
             socketRef.current.disconnect();
         }
     }, []);
+    useEffect(()=>{
+        if(!me) return;
+        if(!stream) return;
+        socketRef.current.on(ACTIONS.JOINED,({socketId})=>{
+            const call=me.call(socketId, stream);
+            call.on('stream',(peerStream)=>{
+                dispatch(addPeerAction(socketId, peerStream))
+            })
+        }) 
+        me.on('call',(call)=>{
+            call.answer(stream);
+            call.on('stream',(peerStream)=>{
+                dispatch(addPeerAction(call.peer, peerStream))
+            })
+        })
+    },[me, stream])
+
+    console.log({peers});
     
     const avatar= clients.map((client)=>(<Client username={client.username} key={client.socketId}/>)
     )
@@ -126,6 +166,7 @@ const Editor=()=>{
                 roomId={roomId}
                 prevState={prevState}
             />
+            <AudioVideo socketRef={socketRef} stream={stream} setStream={setStream}/>
         </div>
     </div>
 };
