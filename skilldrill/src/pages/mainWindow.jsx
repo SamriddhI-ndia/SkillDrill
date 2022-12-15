@@ -93,15 +93,21 @@ const Editor=()=>{
     useEffect(()=>{
         if(!me) return;
         if(!stream) return;
-        socketRef.current.on(ACTIONS.JOINED,({socketId})=>{
+        socketRef.current.on("peer-joined",({socketId})=>{
             const call=me.call(socketId, stream);
             call.on('stream',(peerStream)=>{
+                console.log("111111111111111111111111111111111111111111111111111111");
+                console.log(socketId);
+                console.log(peerStream);
                 dispatch(addPeerAction(socketId, peerStream))
             })
         }) 
         me.on('call',(call)=>{
             call.answer(stream);
             call.on('stream',(peerStream)=>{
+                console.log("-----------------------------------------------------");
+                console.log(call.peer);
+                console.log(stream);
                 dispatch(addPeerAction(call.peer, peerStream))
             })
         })
@@ -166,7 +172,7 @@ const Editor=()=>{
                 roomId={roomId}
                 prevState={prevState}
             />
-            <AudioVideo socketRef={socketRef} stream={stream} setStream={setStream}/>
+            <AudioVideo socketRef={socketRef} stream={stream} setStream={setStream} peers={peers}/>
         </div>
     </div>
 };

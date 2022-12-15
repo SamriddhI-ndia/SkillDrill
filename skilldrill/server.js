@@ -31,6 +31,7 @@ io.on('connection', (socket)=>{
         }
         theSocketId=socketId;
         socket.join(roomId);
+        socket.to(roomId).emit("peer-joined", {socketId});
         socket.emit("get-users", {
             roomId,
             clients: rooms[roomId]
