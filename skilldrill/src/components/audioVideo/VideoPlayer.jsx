@@ -6,12 +6,12 @@ export const VideoPlayer=({stream, val})=>{
         if(videoRef.current) videoRef.current.srcObject=stream;
         
     },[stream]);
-    //console.log("*****************************");
-    //console.log(val); 
+    console.log("*****************************");
+    console.log(stream); 
     return (
     <div>
         
-    <video ref={videoRef} autoPlay/>
+    <video className={val} ref={videoRef} autoPlay/>
     </div>
     );
 }

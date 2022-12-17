@@ -3,6 +3,8 @@ import * as faceapi from "face-api.js";
 import {VideoPlayer} from './VideoPlayer'
 let i=0;
 const AudioVideo = ({ socketRef, stream, setStream, peers}) => {
+    const videoRef = useRef();
+  const canvasVideoRef = useRef();
   
   useEffect(() => {
     startVideo();
@@ -58,12 +60,9 @@ const AudioVideo = ({ socketRef, stream, setStream, peers}) => {
                 
 				<div className="video" >
                 <VideoPlayer stream={stream} socketRef={socketRef} val="x"></VideoPlayer>
-                {
-                    console.log({peers})
-                }
                     {Object.values(peers).map((peer)=>{
                        
-                        return <VideoPlayer stream={peer.stream} socketRef={socketRef} val={peer}></VideoPlayer>
+                        return <VideoPlayer stream={peer.stream} socketRef={socketRef} val="y"></VideoPlayer>
                         
 
                     })}

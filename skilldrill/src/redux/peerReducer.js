@@ -2,9 +2,9 @@ import { DeleteRounded } from "@mui/icons-material";
 import { ADD_PEER, REMOVE_PEER } from "./peerActions";
 
 export const peerReducer = (state, action)=>{
-    //console.log("------------------------------------------------------");
+    console.log("------------------------------------------------------");
 
-    //console.log({state});
+    console.log({state});
     switch (action.type){
         case ADD_PEER:
             return {

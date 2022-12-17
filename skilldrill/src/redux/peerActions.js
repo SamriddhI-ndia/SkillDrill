@@ -1,8 +1,8 @@
 export const ADD_PEER = "ADD_PEER";
 export const REMOVE_PEER = "REMOVE_PEER";
-export const addPeerAction = (peerId, stream)=>({
+export const addPeerAction = (socketId, stream)=>({
     type:ADD_PEER,
-    payload:{peerId, stream}
+    payload:{socketId, stream}
 });
 export const removePeerAction = (peerId)=>({
     type:REMOVE_PEER,

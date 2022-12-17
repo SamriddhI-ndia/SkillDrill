@@ -31,7 +31,7 @@ io.on('connection', (socket)=>{
         }
         theSocketId=socketId;
         socket.join(roomId);
-        socket.to(roomId).emit("peer-joined", {socketId});
+        socket.to(roomId).emit("peer-joined", {socketId, username});
         socket.emit("get-users", {
             roomId,
             clients: rooms[roomId]
@@ -41,9 +41,11 @@ io.on('connection', (socket)=>{
         
         rooms[roomId].forEach(({socketId})=>{
             io.to(socketId).emit(ACTIONS.JOINED,{
+                rooms:rooms,
                 clients: rooms[roomId],
                 username,
                 socketId
+                
             })
         })
     });
