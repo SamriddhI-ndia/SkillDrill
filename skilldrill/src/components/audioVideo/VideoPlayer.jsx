@@ -26,31 +26,31 @@ export const VideoPlayer=({stream, val})=>{
 		   canvasVideoRef.current.innerHtml = faceapi.
      createCanvasFromMedia(videoRef.current);
 faceapi.matchDimensions(canvasVideoRef.current, {
-    width: 940,
-    height: 650,
+    width: 150,
+    height: 150,
 })
 const resized = faceapi.resizeResults(detections, {
-    width: 940,
-    height: 650,
+    width: 150,
+    height: 150,
 });
 
 // to draw the detection onto the detected face i.e the box
-faceapi.draw.drawDetections(canvasVideoRef.current, resized);
+// faceapi  .draw.drawDetections(canvasVideoRef.current, resized);
 
 //to draw the the points onto the detected face
-faceapi.draw.drawFaceLandmarks(canvasVideoRef.current, resized);
+// faceapi.draw.drawFaceLandmarks(canvasVideoRef.current, resized);
 
 //to analyze and output the current expression by the detected face
 faceapi.draw.drawFaceExpressions(canvasVideoRef.current, resized);
-}, 1000)
+}, 10)
 }
     console.log("*****************************");
     console.log(stream); 
     return (
     <div>
         
-    <video className={val} ref={videoRef} autoPlay/>
-    <canvas ref={canvasVideoRef} width="940" height="650"
+    <video className={val} ref={videoRef} autoPlay width="150" height="150" z-index="-1"/>
+    <canvas ref={canvasVideoRef} 
      			className='app__canvas' />
     </div>
     );

@@ -144,7 +144,7 @@ const Editor=()=>{
                 </div>
                 <h3>Connected</h3>
                 <div className="clientsList">
-                    {avatar}
+                <AudioVideo socketRef={socketRef} stream={stream} setStream={setStream} peers={peers}/>
                 </div>
             </div>
             <button className="butn copyBtn" onClick={copyRoomId}>Copy Room Id</button>
@@ -172,7 +172,7 @@ const Editor=()=>{
                 roomId={roomId}
                 prevState={prevState}
             />
-            <AudioVideo socketRef={socketRef} stream={stream} setStream={setStream} peers={peers}/>
+            {/* <AudioVideo socketRef={socketRef} stream={stream} setStream={setStream} peers={peers}/> */}
         </div>
     </div>
 };
