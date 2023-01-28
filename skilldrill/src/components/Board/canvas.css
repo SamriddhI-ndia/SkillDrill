@@ -22,10 +22,6 @@
 
 canvas{
     z-index:10;
-    /* width:150px;
-    height:150px; */
-    position: absolute;
-    left:65px;
 }
 
 .btn-width {
@@ -34,4 +30,9 @@ canvas{
 
 .mouse-state {
     cursor: none;
+}
+
+.app__canvas {
+    position: absolute;
+    left:65px; 
 }

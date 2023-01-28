@@ -15,7 +15,7 @@ function WhiteBoard({socketRef, canvasRef, roomId, prevState}) {
   useEffect(() => {
     const canvas = canvasRef.current;
     ctx.current = canvas.getContext("2d");
-    canvas.height = window.innerHeight;
+    canvas.height = window.innerHeight-130;
     canvas.width = window.innerWidth;
 
   }, [ctx]);
