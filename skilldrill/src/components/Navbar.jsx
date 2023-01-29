@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {PersonCircle} from "react-bootstrap-icons";
 import './nav.css';
-const Navbar = () => {
+import React from  "react";
+const Navbar = ({isLogged,setIsLogged, userName, setUserName}) => {
     
     return (
         <nav className="navbar navbar-expand-md navbar-light nav shadow-sm navBar">
@@ -39,28 +40,24 @@ const Navbar = () => {
                             About
                             </Link>
                         </li>
-                        {/* <li className="nav-item pe-4">
-                            <Link to="/whiteboard" className="nav-link fs-5 fw-bold color">
-                            Whiteboard
-                            </Link>
-                        </li> */}
                         <li className="nav-item pe-4">
-                            <Link to="/room" className="nav-link fs-5 fw-bold color">
+                            <Link to={isLogged?"/room":"/login"} className="nav-link fs-5 fw-bold color">
                                 Join A Room
                             </Link>
                         </li>
                         <li className="nav-item pe-4">
-                            <Link to="/history" className="nav-link fs-5 fw-bold color">
-                               Reports
-                            </Link>
-                        </li>
-                        <li className="nav-item pe-4">
-                            <Link to="/report" className="nav-link fs-5 fw-bold color">
+                            <Link to={isLogged?"/report":"/login"} className="nav-link fs-5 fw-bold color">
                                 Report
-                                
                             </Link>
                         </li>
-                       
+                        {isLogged?(<li className="nav-item pe-4">
+                        <PersonCircle size={25} className="profileIcon" /> <span className="username">{userName}</span>
+                        </li>):(<li className="nav-item pe-4">
+                            <Link to="/login" className="nav-link fs-5 fw-bold color">
+                               Login
+                            </Link>
+                        </li>)}
+                        
                     </ul>
                 </div>
             </div>

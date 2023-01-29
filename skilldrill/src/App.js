@@ -6,7 +6,12 @@ import Editor from './pages/mainWindow';
 import Report from './components/report/Report';
 import { Toaster } from 'react-hot-toast';
 import {BrowserRouter ,Routes,Route} from 'react-router-dom';
+import Login from './components/login/Login';
+import Signup from './components/signUp/SignUp';
+import React, {useEffect, useState} from  "react";
 function App() {
+  const [isLogged,setIsLogged]= useState(false);
+  const [userName, setUserName]=useState("")
   return (
     
     <>
@@ -26,7 +31,7 @@ function App() {
     <BrowserRouter>
     <div className="App">
      <center>
-        <Navbar/>
+        <Navbar isLogged={isLogged} setIsLogged={setIsLogged}  userName={userName} setUserName={setUserName}/>
         </center>
       <Routes>
         <Route exact path="/" element={ <Home/>}>
@@ -35,12 +40,15 @@ function App() {
         <Route exact path='/room' element={<Room/>}>
           
         </Route >
-        <Route path='/editor/:roomId' element={<Editor/>}>
+        <Route exact path='/editor/:roomId' element={<Editor/>}>
           
         </Route>
-        <Route path='/report' element={<Report/>}>
+        <Route exact path='/report' element={<Report/>}>
 
         </Route>
+        <Route exact path='/login' element={<Login isLogged={isLogged} setIsLogged={setIsLogged} userName={userName} setUserName={setUserName}/>}>
+        </Route>
+        <Route exact path='/signup' element={<Signup/>}></Route>
       </Routes>
     </div>
     </BrowserRouter>

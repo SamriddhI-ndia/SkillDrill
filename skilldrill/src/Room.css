@@ -174,3 +174,21 @@ button{
     margin: 0.3rem;
     border-radius:10px;
 }
+.MuiIconButton-root {
+    color: #282a36!important;
+
+}
+.MuiInputBase-input {
+    font-weight: bold;
+    color: #282a36!important;
+    margin-bottom: 1px !important;
+}
+.MuiInput-underline:before {
+    border: 0px  !important;
+    margin-bottom: 4px !important;
+}
+.MuiInput-underline:after {
+    border-bottom:2px solid #282a36!important;
+    margin-bottom: 4px !important;
+   
+}

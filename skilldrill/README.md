@@ -68,3 +68,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+### To connect with local db
+- install mongodb community server [link](https://www.mongodb.com/try/download/community)
+- make sure to run the mongodb server services 
+- open mongodb compass and connect to `mongodb://0.0.0.0:27017`
+

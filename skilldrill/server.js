@@ -8,6 +8,79 @@ const server = http.createServer(app);
 const io = new Server(server);
 const rooms = [];
 let theSocketId = "";
+
+const collection = require("./mongo")
+const cors = require('cors');
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(cors())
+
+app.get("/login", async(req, res)=>{
+    const data=[]
+    // console.log("Email", email)
+    await collection.find({}, (err, val) => {
+        val.forEach((name) => {
+          data.push(name)
+        });
+      }).clone().catch(function(err){ console.log(err)})
+      res.json(data)
+})
+
+app.post("/login", async(req,res)=>{
+    const {email, password}=req.body
+    try{
+        const checkEmail =await collection.findOne({email:email})
+        if(checkEmail)
+        {
+            const checkPassword =await collection.findOne({$and: [{email: email},
+            {password: password}]})
+            if(!checkPassword)
+            {
+                res.json("incorrect password")
+            }
+            else
+            {
+                console.log("Exist");
+                res.json("exist")
+            }
+        }
+        else {
+            console.log("NotExist");
+            res.json("notExist")
+        }
+    }
+    catch (e) {
+        res.json(e)
+    }
+})
+
+app.post("/signup", async(req,res)=>{
+    const {email, password, username}=req.body;
+    const data={
+        email:email,
+        password:password,
+        username:username
+    }
+    try{
+        const checkEmail =await collection.findOne({email:email})
+        const checkUserName = await collection.findOne({username:username});
+        if(checkEmail)
+        {
+            res.json("Already exist")
+        }
+        else if(checkUserName)
+        {
+            res.json("username exist")
+        }
+        else {
+            res.json("notExist")
+            await collection.insertMany([data])
+        }
+    }
+    catch (e) {
+        res.json(e)
+    }
+})
 // const bodyParser = require("body-parser");
 // router.use(bodyParser.json());
 // function getAllConnectedClients(roomId) {
