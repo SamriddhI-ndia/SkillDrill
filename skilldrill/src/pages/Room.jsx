@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import Switch from 'react-switch';
 import '../Room.css'
-const Room = () => {
+const Room = ({userName, isInterviewee, setIsInterviewee}) => {
     const navigate = useNavigate();
 
     const [roomId, setRoomId] = useState('');
-    const [username, setUsername] = useState('');
+    // const [username, setUsername] = useState('');
+    
+
+    const handleChange = val => {
+        setIsInterviewee(val)
+    }
     const createNewRoom = (e) => {
         e.preventDefault();
         const id = uuidV4();
@@ -16,7 +22,7 @@ const Room = () => {
     };
 
     const joinRoom = () => {
-        if (!roomId || !username) {
+        if (!roomId || !userName) {
             toast.error('ROOM ID & username is required');
             return;
         }
@@ -24,7 +30,7 @@ const Room = () => {
         // Redirect
         navigate(`/editor/${roomId}`, {
             state: {
-                username,
+                userName,
             },
         });
         console.log("done !");
@@ -52,14 +58,31 @@ const Room = () => {
                     <input
                         type="text"
                         className="inputBox"
-                        placeholder="USERNAME"
-                        onChange={(e) => setUsername(e.target.value)}
-                        value={username}
+                        value={userName}
                         onKeyUp={handleInputEnter}
+                        disabled
                     />
-                    <button className="butn joinBtn" onClick={joinRoom}>
+                    <div>
+                    <Switch
+                        checked={isInterviewee}
+                        onChange={handleChange}
+                        onColor="#4aed88"
+                        onHandleColor="#FFFFFF"
+                        handleDiameter={30}
+                        uncheckedIcon={false}
+                        checkedIcon={false}
+                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                        height={20}
+                        width={48}
+                        className="react-switch toggle"
+                        id="material-switch"
+                    />
+                    <span className="textToggle">{isInterviewee?"Interviewee":"Interviewer"}</span>
+                    <button className="butn joinBtn alignRight" onClick={joinRoom}>
                         Join
                     </button>
+                    </div>
                     <span className="createInfo">
                         If you don't have an invite then create &nbsp;
                         <a

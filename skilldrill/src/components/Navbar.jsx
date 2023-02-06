@@ -46,7 +46,7 @@ const Navbar = ({isLogged,setIsLogged, userName, setUserName}) => {
                             </Link>
                         </li>
                         <li className="nav-item pe-4">
-                            <Link to={isLogged?"/report":"/login"} className="nav-link fs-5 fw-bold color">
+                            <Link to={isLogged?`/reportCard/${userName}`:"/login"} className="nav-link fs-5 fw-bold color">
                                 Report
                             </Link>
                         </li>

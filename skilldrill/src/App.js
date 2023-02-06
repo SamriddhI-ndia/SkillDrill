@@ -9,9 +9,12 @@ import {BrowserRouter ,Routes,Route} from 'react-router-dom';
 import Login from './components/login/Login';
 import Signup from './components/signUp/SignUp';
 import React, {useEffect, useState} from  "react";
+import ReportCard from './components/reportCard/ReportCard'
 function App() {
   const [isLogged,setIsLogged]= useState(false);
-  const [userName, setUserName]=useState("")
+  const [userName, setUserName]=useState("");
+  const [isInterviewee, setIsInterviewee] = useState(true);
+  
   return (
     
     <>
@@ -37,18 +40,19 @@ function App() {
         <Route exact path="/" element={ <Home/>}>
          
         </Route>
-        <Route exact path='/room' element={<Room/>}>
+        <Route exact path='/room' element={<Room userName={userName} isInterviewee={isInterviewee} setIsInterviewee={setIsInterviewee}/>}>
           
         </Route >
-        <Route exact path='/editor/:roomId' element={<Editor/>}>
+        <Route exact path='/editor/:roomId' element={<Editor isInterviewee={isInterviewee} userName={userName} />}>
           
         </Route>
-        <Route exact path='/report' element={<Report/>}>
+        <Route exact path='/report/:roomId' element={<Report/>}>
 
         </Route>
         <Route exact path='/login' element={<Login isLogged={isLogged} setIsLogged={setIsLogged} userName={userName} setUserName={setUserName}/>}>
         </Route>
         <Route exact path='/signup' element={<Signup/>}></Route>
+        <Route exact path='/reportCard/:username' element={<ReportCard/>}> </Route>
       </Routes>
     </div>
     </BrowserRouter>

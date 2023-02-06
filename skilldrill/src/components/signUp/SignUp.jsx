@@ -86,7 +86,7 @@ function Signup() {
                 <center><button className="butn joinBtn" onClick={submit}>SUBMIT</button>
                 <div>OR</div>   
                 <div>Already have an account</div>
-                <Link to="/login">Login</Link></center>
+                <Link to="/login" className="createNewBtn">Login</Link></center>
             </form>
 
             

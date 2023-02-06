@@ -104,7 +104,7 @@ function Login({isLogged,setIsLogged, userName, setUserName}) {
                 <center><button className="butn joinBtn" onClick={submit}>SUBMIT</button>
                 <div>OR</div>
                 <div>Doesn't have any account</div>
-                <Link to="/signup">SignUp</Link></center>
+                <Link to="/signup" className="createNewBtn">SignUp</Link></center>
             </form>
             </div>
         </div>

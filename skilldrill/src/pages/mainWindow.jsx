@@ -13,7 +13,7 @@ import {v4 as uuidV4} from 'uuid';
 import { peerReducer } from "../redux/peerReducer";
 import { addPeerAction } from "../redux/peerActions";
 
-const Editor=()=>{ 
+const Editor=({isInterviewee, userName})=>{ 
     const socketRef = useRef(null); //component don't re-render after any change in state of useRef. 
     const location = useLocation();
     const codeRef = useRef(null);
@@ -27,9 +27,6 @@ const Editor=()=>{
     const [stream, setStream] = useState();
     const socketId = uuidV4();
     const [peers, dispatch]=useReducer(peerReducer,{});
-    const getUsers = ({clients})=>{
-        console.log(clients);
-    }
 
     useEffect(()=>{
         const init =async()=>{
@@ -46,20 +43,16 @@ const Editor=()=>{
             
             const peer = new Peer(socketId);
             setMe(peer); 
-            console.log("peers");
-            console.log(peer);
-
             socketRef.current.emit(ACTIONS.JOIN, {
                 roomId,
-                username: location.state?.username,
-                socketId
+                username: userName,
+                socketId,
+                isInterviewee
             });
-
-            socketRef.current.on("get-users", getUsers);
-        
+            
             //Listening for joined event
             socketRef.current.on(ACTIONS.JOINED, ({clients, username, socketId})=>{
-                if(username!== location.state?.username) {
+                if(username!== userName) {
                     toast.success(`${username} joined the room`);
                     console.log(`${username} joined`);
                 }
@@ -75,8 +68,8 @@ const Editor=()=>{
             })
 
             // Listening for disconnected 
-            socketRef.current.on(ACTIONS.DISCONNECTED, ({socketId, username})=>{
-                toast.success(`${username} left the room`);
+            socketRef.current.on(ACTIONS.DISCONNECTED, ({socketId, userName})=>{
+                toast.success(`${userName} left the room`);
                 setClients((prev)=>{
                     return prev.filter(client => client.socketId!=socketId)
                 })
@@ -115,7 +108,7 @@ const Editor=()=>{
 
     console.log({peers});
     
-    const avatar= clients.map((client)=>(<Client username={client.username} key={client.socketId}/>)
+    const avatar= clients.map((client)=>(<Client userName={client.userName} key={client.socketId}/>)
     )
 
     async function copyRoomId() {
@@ -129,7 +122,10 @@ const Editor=()=>{
     }
 
     function leaveRoom() {
+        if(isInterviewee)
         reactNavigator('/');
+        else
+        reactNavigator(`/report/${roomId}`,{state:{userName,}})
     }
 
     if(!location.state) {
@@ -160,6 +156,7 @@ const Editor=()=>{
                 className={prevState=='WhiteBoard'?"buttonActive":""}>
                 WhiteBoard
             </button>
+            <span style={{float:"right"}}>&#9742; {isInterviewee?"Interviewee":"Interviewer"}</span>
             <CodeEditor 
                 socketRef={socketRef} 
                 roomId={roomId}  
@@ -172,6 +169,7 @@ const Editor=()=>{
                 roomId={roomId}
                 prevState={prevState}
             />
+            
             {/* <AudioVideo socketRef={socketRef} stream={stream} setStream={setStream} peers={peers}/> */}
         </div>
     </div>

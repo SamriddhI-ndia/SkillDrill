@@ -9,12 +9,23 @@ const io = new Server(server);
 const rooms = [];
 let theSocketId = "";
 
-const collection = require("./mongo")
+const {collection, roomCollection, feedbackCollection} = require("./mongo")
 const cors = require('cors');
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cors())
-
+async function callDb(clients, roomId) {
+    const checkRoom = await roomCollection.findOne({roomId:roomId},{_id:0})
+        console.log("checkRoom", checkRoom)
+        if(checkRoom) {
+            console.log("present in db")
+            await roomCollection.updateMany({roomId:roomId}, {$set: {client:clients}})
+        }
+        else {
+            console.log("not in db")
+            await roomCollection.insertMany({roomId:roomId, client:clients})
+        }
+}
 app.get("/login", async(req, res)=>{
     const data=[]
     // console.log("Email", email)
@@ -30,6 +41,7 @@ app.post("/login", async(req,res)=>{
     const {email, password}=req.body
     try{
         const checkEmail =await collection.findOne({email:email})
+        console.log("checkEmail",checkEmail)
         if(checkEmail)
         {
             const checkPassword =await collection.findOne({$and: [{email: email},
@@ -81,21 +93,59 @@ app.post("/signup", async(req,res)=>{
         res.json(e)
     }
 })
-// const bodyParser = require("body-parser");
-// router.use(bodyParser.json());
-// function getAllConnectedClients(roomId) {
-//     return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map((socketId)=>{
-//         return {
-//             socketId,
-//             username:userSocketMap[socketId]
-//         }
-//     });
-// }
+
+app.get("/report/:id", async(req,res)=>{
+    const room = req.params.id;
+    const users = await roomCollection.findOne({roomId:room},{_id:0, roomId:0})
+    res.json(users)
+})
+
+app.post("/feedback", async(req, res)=>{
+    const data = req.body;
+    console.log(req.body)
+    console.log("feedback",data)
+    const interviewee = data.to;
+    try {
+        const checkForUser=await feedbackCollection.findOne({to:interviewee})
+        console.log("checkForUser",checkForUser)
+        if(checkForUser) {
+            await feedbackCollection.updateMany({to:interviewee}, {$push:{info:data.info}})
+            
+        }
+        else {
+            await feedbackCollection.insertMany({to:data.to, info:[data.info]})
+        }
+        res.json("Successful")
+    }
+    catch (e) {
+        res.json("error");
+    }
+})
+
+app.get("/reportCard/:id", async(req,res)=>{
+    const user = req.params.id;
+    console.log("user", user);
+    const data = await feedbackCollection.findOne({to:user},{_id:0})
+    console.log("look", data)
+    res.json(data.info)
+})
+
+const userSocketMap = {};
+function getAllConnectedClients(roomId) {
+    return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map((socketId)=>{
+        return {
+            socketId,
+            username:userSocketMap[socketId][0],
+            status:userSocketMap[socketId][1]
+        }
+    });
+}
 
 io.on('connection', (socket)=>{
     console.log('socket connected');
-    socket.on(ACTIONS.JOIN, ({roomId, username, socketId})=>{
-        //console.log(socketId);
+    socket.on(ACTIONS.JOIN, ({roomId, username, socketId, isInterviewee})=>{
+        // console.log('status', isInterviewee)
+        userSocketMap[socket.id] = [username, isInterviewee];
         if(rooms[roomId])
         rooms[roomId].push({username, socketId});
         else {
@@ -105,12 +155,12 @@ io.on('connection', (socket)=>{
         theSocketId=socketId;
         socket.join(roomId);
         socket.to(roomId).emit("peer-joined", {socketId, username});
-        socket.emit("get-users", {
-            roomId,
-            clients: rooms[roomId]
+        const clients = getAllConnectedClients(roomId);
+        console.log(clients);
+        socket.emit("get-roomId", {
+            roomId:roomId
         })
-        //const clients = getAllConnectedClients(roomId);
-        //console.log(clients);
+        callDb(clients, roomId);
         
         rooms[roomId].forEach(({socketId})=>{
             io.to(socketId).emit(ACTIONS.JOINED,{
