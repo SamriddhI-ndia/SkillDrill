@@ -30,10 +30,9 @@ const ReportCard =()=>{
         :
         (data.map((val, i)=>{
           return (
-            <div key={i}>
-                <ul className="cards">
-                    <li className="card">
-                        <div>
+            <ul key={i} className="cards">
+               <li className="Reportcard">
+                        
                     <div className="row">
                         <div className="column"> <img className="icon" src="https://assets.codepen.io/7287362/Frank_bw2400.png" alt=""/> </div>
                         <div class="column">
@@ -43,21 +42,19 @@ const ReportCard =()=>{
                         </div>
                     </div>
                     <div class="card-content">
-                        <div>Work Experience: {val.feedback.work.score}/5 {val.feedback.work.comment}</div>
-                        <div>Technical Skills: {val.feedback.technical.score}/5 {val.feedback.technical.comment}</div>
-                        <div>Verbal Communication: {val.feedback.verbal.score}/5 {val.feedback.verbal.comment}</div>
-                        <div>Candidate Enthusiasm: {val.feedback.enth.score}/5 {val.feedback.enth.comment}</div>
-                        <div>Additional Comment: {val.feedback.addComt.comment}</div>
+                        <div><b>Work Experience:</b> {val.feedback.work.score}/5 {val.feedback.work.comment}</div>
+                        <div> <b>Technical Skills:</b> {val.feedback.technical.score}/5 {val.feedback.technical.comment}</div>
+                        <div><b>Verbal Communication: </b>{val.feedback.verbal.score}/5 {val.feedback.verbal.comment}</div>
+                        <div><b>Candidate Enthusiasm: </b>{val.feedback.enth.score}/5 {val.feedback.enth.comment}</div>
+                        <div><b>Additional Comment: </b>{val.feedback.addComt.comment}</div>
                     </div>
-                    </div>
+                    
                 </li>
-                
-                </ul>
                 
                 
                 
 
-            </div>
+            </ul>
           )
         }))}
         
