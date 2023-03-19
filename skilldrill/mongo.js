@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://0.0.0.0:27017/skillDrill')
+
+mongoose.connect(process.env.REACT_APP_MONGO_URL)
 .then(()=>{
     console.log("mongodb connected");
 })
-.catch(()=>{
-    console.log("failed");
+.catch((e)=>{
+    console.log("failed", e);
 })
 
 const newSchema = new mongoose.Schema({
@@ -68,7 +69,7 @@ const feedbackSchema = new mongoose.Schema({
         }
     ]
 })
-const collection = mongoose.model("collection", newSchema)
-const roomCollection = mongoose.model("roomCollection", roomSchema)
-const feedbackCollection = mongoose.model("feedbackCollection", feedbackSchema)
-module.exports= {collection, roomCollection, feedbackCollection}
+const user = mongoose.model("user", newSchema)
+const room = mongoose.model("room", roomSchema)
+const feedback = mongoose.model("feedback", feedbackSchema)
+module.exports= {user, room, feedback}

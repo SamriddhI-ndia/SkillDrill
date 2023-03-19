@@ -2,34 +2,34 @@ const express =require('express');
 const http =require('http');
 const {Server} =require('socket.io');
 const ACTIONS =require('./src/components/mainWindow/Actions');
-
+require('dotenv').config();
 const app =express();
 const server = http.createServer(app);
 const io = new Server(server);
 const rooms = [];
 let theSocketId = "";
 
-const {collection, roomCollection, feedbackCollection} = require("./mongo")
+const {user, room, feedback} = require("./mongo")
 const cors = require('cors');
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cors())
 async function callDb(clients, roomId) {
-    const checkRoom = await roomCollection.findOne({roomId:roomId},{_id:0})
+    const checkRoom = await room.findOne({roomId:roomId},{_id:0})
         console.log("checkRoom", checkRoom)
         if(checkRoom) {
             console.log("present in db")
-            await roomCollection.updateMany({roomId:roomId}, {$set: {client:clients}})
+            await room.updateMany({roomId:roomId}, {$set: {client:clients}})
         }
         else {
             console.log("not in db")
-            await roomCollection.insertMany({roomId:roomId, client:clients})
+            await room.insertMany({roomId:roomId, client:clients})
         }
 }
 app.get("/login", async(req, res)=>{
     const data=[]
     // console.log("Email", email)
-    await collection.find({}, (err, val) => {
+    await user.find({}, (err, val) => {
         val.forEach((name) => {
           data.push(name)
         });
@@ -40,11 +40,11 @@ app.get("/login", async(req, res)=>{
 app.post("/login", async(req,res)=>{
     const {email, password}=req.body
     try{
-        const checkEmail =await collection.findOne({email:email})
+        const checkEmail =await user.findOne({email:email})
         console.log("checkEmail",checkEmail)
         if(checkEmail)
         {
-            const checkPassword =await collection.findOne({$and: [{email: email},
+            const checkPassword =await user.findOne({$and: [{email: email},
             {password: password}]})
             if(!checkPassword)
             {
@@ -74,8 +74,8 @@ app.post("/signup", async(req,res)=>{
         username:username
     }
     try{
-        const checkEmail =await collection.findOne({email:email})
-        const checkUserName = await collection.findOne({username:username});
+        const checkEmail =await user.findOne({email:email})
+        const checkUserName = await user.findOne({username:username});
         if(checkEmail)
         {
             res.json("Already exist")
@@ -86,7 +86,7 @@ app.post("/signup", async(req,res)=>{
         }
         else {
             res.json("notExist")
-            await collection.insertMany([data])
+            await user.insertMany([data])
         }
     }
     catch (e) {
@@ -95,8 +95,8 @@ app.post("/signup", async(req,res)=>{
 })
 
 app.get("/report/:id", async(req,res)=>{
-    const room = req.params.id;
-    const users = await roomCollection.findOne({roomId:room},{_id:0, roomId:0})
+    const id = req.params.id;
+    const users = await room.findOne({roomId:id},{_id:0, roomId:0})
     res.json(users)
 })
 
@@ -106,14 +106,14 @@ app.post("/feedback", async(req, res)=>{
     console.log("feedback",data)
     const interviewee = data.to;
     try {
-        const checkForUser=await feedbackCollection.findOne({to:interviewee})
+        const checkForUser=await feedback.findOne({to:interviewee})
         console.log("checkForUser",checkForUser)
         if(checkForUser) {
-            await feedbackCollection.updateMany({to:interviewee}, {$push:{info:data.info}})
+            await feedback.updateMany({to:interviewee}, {$push:{info:data.info}})
             
         }
         else {
-            await feedbackCollection.insertMany({to:data.to, info:[data.info]})
+            await feedback.insertMany({to:data.to, info:[data.info]})
         }
         res.json("Successful")
     }
@@ -125,7 +125,7 @@ app.post("/feedback", async(req, res)=>{
 app.get("/reportCard/:id", async(req,res)=>{
     const user = req.params.id;
     console.log("user", user);
-    const data = await feedbackCollection.findOne({to:user},{_id:0})
+    const data = await feedback.findOne({to:user},{_id:0})
     console.log("look", data)
     res.json(data.info)
 })
