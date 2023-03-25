@@ -33,7 +33,16 @@ const roomSchema = new mongoose.Schema({
         {
             socketId:String,
             username: String,
-            status: Boolean
+            status: Boolean,
+            expressions: { 
+                    neutral:String,
+                    angry:String,
+                    sad:String,
+                    surprised:String,
+                    happy:String,
+                    disgusted:String,
+                    fearful:String
+            }
         }
     ]
 })

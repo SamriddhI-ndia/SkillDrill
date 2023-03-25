@@ -44,6 +44,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "react-switch": "^7.0.0",
+    "react-test-renderer":"^17.0.2",
     "roughjs": "^4.5.2",
     "socket.io": "^4.5.2",
     "socket.io-client": "^4.5.2",

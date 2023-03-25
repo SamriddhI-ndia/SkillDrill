@@ -12,6 +12,7 @@ import Peer from 'peerjs';
 import {v4 as uuidV4} from 'uuid';
 import { peerReducer } from "../redux/peerReducer";
 import { addPeerAction } from "../redux/peerActions";
+import axios from "axios";
 
 const Editor=({isInterviewee, userName})=>{ 
     const socketRef = useRef(null); //component don't re-render after any change in state of useRef. 
@@ -20,13 +21,19 @@ const Editor=({isInterviewee, userName})=>{
     const reactNavigator = useNavigate();
     const {roomId} =useParams();
     const [clients,setClients]=useState([]);
-    const [noOfClient, setNoOfClient] = useState(0);
     const canvasRef = useRef(null);
     const [prevState, setPrevState] = useState('CodeEditor');
     const [me, setMe] = useState();
     const [stream, setStream] = useState();
     const socketId = uuidV4();
     const [peers, dispatch]=useReducer(peerReducer,{});
+    const neutral = useRef(0);
+    const angry = useRef(0);
+    const disgusted = useRef(0);
+    const sad = useRef(0);
+    const happy = useRef(0);
+    const fearful = useRef(0);
+    const surprised = useRef(0);
 
     useEffect(()=>{
         const init =async()=>{
@@ -89,18 +96,12 @@ const Editor=({isInterviewee, userName})=>{
         socketRef.current.on("peer-joined",({socketId})=>{
             const call=me.call(socketId, stream);
             call.on('stream',(peerStream)=>{
-                console.log("111111111111111111111111111111111111111111111111111111");
-                console.log(socketId);
-                console.log(peerStream);
                 dispatch(addPeerAction(socketId, peerStream))
             })
         }) 
         me.on('call',(call)=>{
             call.answer(stream);
             call.on('stream',(peerStream)=>{
-                console.log("-----------------------------------------------------");
-                console.log(call.peer);
-                console.log(stream);
                 dispatch(addPeerAction(call.peer, peerStream))
             })
         })
@@ -121,9 +122,36 @@ const Editor=({isInterviewee, userName})=>{
         }
     }
 
-    function leaveRoom() {
-        if(isInterviewee)
+    async function leaveRoom() {
+        if(isInterviewee){
+            //post request to room with expressions data.
+        const expressionFeedback = {
+            "username":userName,
+            "roomId":roomId,
+            "expressions":{ neutral: neutral.current, 
+                            sad: sad.current, 
+                            happy: happy.current, 
+                            disgusted: disgusted.current, 
+                            surprised: surprised.current, 
+                            fearful: fearful.current, 
+                            angry: angry.current}
+        }
+        try{
+            console.log(expressionFeedback);
+            await axios.post("http://localhost:5000/expressions", expressionFeedback)
+            .then(res=>{
+                if(res.data==="Successful")
+                {
+                    toast.success("Left room successfully.")
+                }})
+            .catch(e=>{
+                toast.error("Expressions post failed")
+            })
+        }catch(e){
+            console.log("Something went wrong ", e);
+        }
         reactNavigator('/');
+        }
         else
         reactNavigator(`/report/${roomId}`,{state:{userName,}})
     }
@@ -140,7 +168,18 @@ const Editor=({isInterviewee, userName})=>{
                 </div>
                 <h3>Connected</h3>
                 <div className="clientsList">
-                <AudioVideo socketRef={socketRef} stream={stream} setStream={setStream} peers={peers}/>
+                <AudioVideo 
+                    socketRef={socketRef} 
+                    stream={stream} 
+                    setStream={setStream} 
+                    peers={peers} 
+                    neutral={neutral} 
+                    angry={angry} 
+                    sad={sad} 
+                    surprised={surprised} 
+                    happy={happy} 
+                    disgusted={disgusted}
+                    fearful={fearful} />
                 </div>
             </div>
             <button className="butn copyBtn" onClick={copyRoomId}>Copy Room Id</button>

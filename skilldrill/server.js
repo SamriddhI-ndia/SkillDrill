@@ -100,6 +100,35 @@ app.get("/report/:id", async(req,res)=>{
     res.json(users)
 })
 
+app.post("/expressions", async(req, res) => {
+    //console.log(req.body);
+    const clientUsername = req.body.username;
+    const roomId = req.body.roomId;
+    const expressions = req.body.expressions;
+    // add data to room table.
+    try{
+        console.log(clientUsername)
+        const checkForUser = await room.findOne({roomId: roomId, client: {$elemMatch: {username:clientUsername}}})
+
+        console.log("check client for expression feedback", checkForUser)
+        if(checkForUser) {
+         await room.updateMany(
+                {   roomId:roomId, 
+                    "client.username": clientUsername 
+                },
+                {
+                  $set: { "client.$.expressions": expressions }
+                }
+             )
+             const cr  = await room.findOne({roomId: roomId, client: {$elemMatch: {username:clientUsername}}})
+             console.log("---->>>>>>>After updating check client for expression feedback", cr)
+        }
+        console.log("End tak aaya hai ye")
+    }catch (e) {
+        console.log(e);
+    }
+})
+
 app.post("/feedback", async(req, res)=>{
     const data = req.body;
     console.log(req.body)
@@ -110,7 +139,6 @@ app.post("/feedback", async(req, res)=>{
         console.log("checkForUser",checkForUser)
         if(checkForUser) {
             await feedback.updateMany({to:interviewee}, {$push:{info:data.info}})
-            
         }
         else {
             await feedback.insertMany({to:data.to, info:[data.info]})
