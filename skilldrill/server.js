@@ -26,16 +26,6 @@ async function callDb(clients, roomId) {
             await room.insertMany({roomId:roomId, client:clients})
         }
 }
-app.get("/login", async(req, res)=>{
-    const data=[]
-    // console.log("Email", email)
-    await user.find({}, (err, val) => {
-        val.forEach((name) => {
-          data.push(name)
-        });
-      }).clone().catch(function(err){ console.log(err)})
-      res.json(data)
-})
 
 app.post("/login", async(req,res)=>{
     const {email, password}=req.body
@@ -46,19 +36,20 @@ app.post("/login", async(req,res)=>{
         {
             const checkPassword =await user.findOne({$and: [{email: email},
             {password: password}]})
+            
             if(!checkPassword)
             {
-                res.json("incorrect password")
+                res.json({status : "incorrect password"})
             }
             else
             {
                 console.log("Exist");
-                res.json("exist")
+                res.json({status : "exist", username: checkPassword.username})
             }
         }
         else {
             console.log("NotExist");
-            res.json("notExist")
+            res.json({status : "notExist"})
         }
     }
     catch (e) {

@@ -37,18 +37,20 @@ function Login({isLogged,setIsLogged, userName, setUserName}) {
                 email,password
             })
             .then(res=>{
-                if(res.data=="exist")
+                
+                if(res.data.status === "exist")
                 {
                     
                     toast.success("Successfully LoggedIn!")
-                    exist=true;
-                    // history("/")
+                    setUserName(res.data.username);
+                    setIsLogged(!isLogged)
+                    history("/")
                 }
-                else if(res.data=="notExist") {
+                else if(res.data.status ==="notExist") {
                     toast.error("User have not signUp")
                     history("/signup")
                 }
-                else if(res.data=="incorrect password")
+                else if(res.data.status ==="incorrect password")
                 {
                     toast.error("Incorrect password :(")
                 }
@@ -57,29 +59,7 @@ function Login({isLogged,setIsLogged, userName, setUserName}) {
                 toast.error("Something went wrong.")
                 console.log(e);
             })
-            if(exist)
-            {
-                await axios.get("http://localhost:5000/login")
-                    .then(res=>{
-                        const data=res.data;
-                        console.log(data)
-                        for(let i=0;i<data.length;i++){
-                            if(data[i].email==email)
-                            {
-                                console.log(data[i].email, data[i].username)
-                                setUserName(data[i].username);
-                                setIsLogged(!isLogged)
-                                history("/")
-                            }
-                        }
-                        
-                    })
-                    .catch(e=>{
-                        console.log(e);
-                    })
-            }
-            
-         }
+        }
          catch(e) {
             console.log(e);
         }
