@@ -87,34 +87,45 @@ app.post("/signup", async(req,res)=>{
 
 app.get("/report/:id", async(req,res)=>{
     const id = req.params.id;
-    const users = await room.findOne({roomId:id},{_id:0, roomId:0})
-    res.json(users)
+    const user = await room.findOne({roomId:id},{_id:0, roomId:0})
+    res.json(user)
 })
 
 app.post("/expressions", async(req, res) => {
-    //console.log(req.body);
     const clientUsername = req.body.username;
     const roomId = req.body.roomId;
     const expressions = req.body.expressions;
-    // add data to room table.
     try{
-        console.log(clientUsername)
-        const checkForUser = await room.findOne({roomId: roomId, client: {$elemMatch: {username:clientUsername}}})
-
-        console.log("check client for expression feedback", checkForUser)
-        if(checkForUser) {
-         await room.updateMany(
-                {   roomId:roomId, 
-                    "client.username": clientUsername 
-                },
+        const checkForUser = await feedback.findOne({to: clientUsername})
+        if(checkForUser){
+            const checkForRoomId = await feedback.findOne({to: clientUsername, info: {$elemMatch: {roomId:roomId}}})
+            if(checkForRoomId){
+                await updateMany({
+                    to:clientUsername,
+                    info:[{roomId: roomId}]
+                },{
+                    $set:{
+                        "info.$.expressions":expressions,
+                    }
+                })
+            }else{
+                await feedback.updateMany({
+                    to:clientUsername
+                }, 
                 {
-                  $set: { "client.$.expressions": expressions }
-                }
-             )
-             const cr  = await room.findOne({roomId: roomId, client: {$elemMatch: {username:clientUsername}}})
-             console.log("---->>>>>>>After updating check client for expression feedback", cr)
+                    $push:{
+                        info:[{
+                            roomId:roomId,
+                            expressions:expressions
+                        }]
+                    }
+                })
+            }
+            
+        }else {
+            await feedback.insertMany({to:clientUsername, info:[{roomId: roomId, expressions: expressions}]})
         }
-        console.log("End tak aaya hai ye")
+        
     }catch (e) {
         console.log(e);
     }
@@ -122,14 +133,38 @@ app.post("/expressions", async(req, res) => {
 
 app.post("/feedback", async(req, res)=>{
     const data = req.body;
-    console.log(req.body)
-    console.log("feedback",data)
     const interviewee = data.to;
+    const roomId = data.info.roomId;
     try {
         const checkForUser=await feedback.findOne({to:interviewee})
-        console.log("checkForUser",checkForUser)
         if(checkForUser) {
-            await feedback.updateMany({to:interviewee}, {$push:{info:data.info}})
+            const checkForRoomId=await feedback.findOne({to:interviewee, info: {$elemMatch: {roomId:roomId}}})
+            if(checkForRoomId){
+                await feedback.updateMany(
+                    {   to:interviewee, 
+                        "info.roomId":roomId
+                    }, 
+                    {
+                        $set:
+                            {"info.$.by":data.info.by, 
+                             "info.$.feedback":data.info.feedback,
+                             "info.$.roomId":data.info.roomId
+                            }
+                    })
+            }else{
+                await feedback.updateMany({
+                    to:interviewee
+                },{
+                    $push:{
+                        info:[{
+                            by:data.info.by,
+                            feedback:data.info.feedback,
+                            roomId:data.info.roomId
+                        }]
+                    }
+                })
+            }
+            
         }
         else {
             await feedback.insertMany({to:data.to, info:[data.info]})
@@ -149,6 +184,13 @@ app.get("/reportCard/:id", async(req,res)=>{
     res.json(data.info)
 })
 
+app.get("/expression/:username/:id", async(req, res)=>{
+    const username = req.params.username;
+    const roomId = req.params.id;
+    const data = await feedback.findOne({to:username,info: {$elemMatch: {roomId:roomId}}})
+    res.json(data.info)
+})
+
 const userSocketMap = {};
 function getAllConnectedClients(roomId) {
     return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map((socketId)=>{
@@ -161,7 +203,7 @@ function getAllConnectedClients(roomId) {
 }
 
 io.on('connection', (socket)=>{
-    console.log('socket connected');
+    //console.log('socket connected');
     socket.on(ACTIONS.JOIN, ({roomId, username, socketId, isInterviewee})=>{
         // console.log('status', isInterviewee)
         userSocketMap[socket.id] = [username, isInterviewee];
@@ -175,7 +217,8 @@ io.on('connection', (socket)=>{
         socket.join(roomId);
         socket.to(roomId).emit("peer-joined", {socketId, username});
         const clients = getAllConnectedClients(roomId);
-        console.log(clients);
+        
+        //console.log(clients);
         socket.emit("get-roomId", {
             roomId:roomId
         })

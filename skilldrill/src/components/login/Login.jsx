@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from  "react";
+import React, { useState} from  "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "@material-ui/core/Input";
 import IconButton from "@material-ui/core/IconButton";
@@ -16,7 +16,6 @@ function Login({isLogged,setIsLogged, userName, setUserName}) {
         password: "",
         showPassword: false,
       });
-    let exist=false;
       const handleClickShowPassword = () => {
         setValues({ ...values, showPassword: !values.showPassword });
       };

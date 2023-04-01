@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 import axios from "axios";
 import '../../Room.css'
+import PieChart from "../reportCard/PieChart";
 
-const FeedbackForm = ({intervieweeList, len, interviewer})=>{
+const FeedbackForm = ({intervieweeList, len, interviewer, roomId})=>{
     console.log(len)
     const interviewerName=interviewer.userName;
     const [textWork, setTextWork]=useState("");
@@ -18,6 +19,24 @@ const FeedbackForm = ({intervieweeList, len, interviewer})=>{
     const [scoreEnth, setScoreEnth]=useState(0);
     const [next, setNext]=useState(0)
     const location = useNavigate();
+    const [data, setData] = useState([]);
+    // useEffect(()=>{
+    //  x   async function exp(){
+    //     try {
+    //         console.log("..................try kar raha hai", intervieweeList, roomId);
+    //         await axios.get(`http://localhost:5000/expression/${intervieweeList[next].username}/${roomId}}`)
+    //       .then(res=> {
+    //         setData(res.data)
+    //         console.log(res.data)})
+    //       .catch(e=>{
+    //         console.log(e)
+    //       })} catch(e){
+    //         console.log("Pie chart data not fetched.");
+    //     }
+    // }
+    // exp();
+    // },[next])
+   
     async function submit(){
         
         if(scoreWork>5 || scoreWork<0 || scoreTechnical>5 || scoreTechnical<0 || scoreVerbal>5 || scoreVerbal<0 || scoreEnth>5 || scoreEnth<0)
@@ -30,6 +49,7 @@ const FeedbackForm = ({intervieweeList, len, interviewer})=>{
             to:intervieweeList[next].username,
             info:{
                 by: interviewerName,
+                roomId: roomId,
                 feedback: {
                     work: {
                         score: scoreWork,
@@ -129,6 +149,7 @@ const FeedbackForm = ({intervieweeList, len, interviewer})=>{
                 <span className="feedbackLabel">Additional Feedback : </span> 
                 <input type="text" onChange={(e)=>{setTextAdd(e.target.value)}} placeholder="Additional Feedback" className="feedbackInput" value={textAdd}/>
             </div>
+           
             <center><button className="butn joinBtn" onClick={submit}>{next+1===len?(`SUBMIT`):(`NEXT`)} </button>
             </center>
         </div>

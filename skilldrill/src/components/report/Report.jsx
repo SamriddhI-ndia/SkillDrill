@@ -36,7 +36,7 @@ const Report = () => {
             intervieweeList.push(val)
           }
         }))}
-        <FeedbackForm intervieweeList={intervieweeList} len={intervieweeList.length} interviewer={userName}/>
+        <FeedbackForm intervieweeList={intervieweeList} len={intervieweeList.length} interviewer={userName} roomId={roomId}/>
       </div> );
 }
  

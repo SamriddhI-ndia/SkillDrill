@@ -51,9 +51,20 @@ const feedbackSchema = new mongoose.Schema({
         type:String,
         required: true
     },
+    
     info:[
         {
             by:String,
+            roomId: String,
+            expressions: { 
+                neutral:String,
+                angry:String,
+                sad:String,
+                surprised:String,
+                happy:String,
+                disgusted:String,
+                fearful:String
+        },
             feedback:{
                 work:{
                     score:Number,
